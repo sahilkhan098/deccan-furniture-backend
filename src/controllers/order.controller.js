@@ -1,4 +1,4 @@
-const Order = require('../models/Order');
+import Order from '../models/order.model.js';
 
 // Create new order
 const createOrder = async (req, res) => {
@@ -56,7 +56,4 @@ const getOrdersByPhone = async (req, res) => {
   }
 };
 
-module.exports = {
-  createOrder,
-  getOrdersByPhone,
-};
+export { createOrder, getOrdersByPhone };
