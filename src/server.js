@@ -1,50 +1,70 @@
-import 'dotenv/config';
 import express from 'express';
+import dotenv from 'dotenv';
 import cors from 'cors';
-import connectDB from './config/db.js';
-import productRoutes from './routes/product.route.js';
-import orderRoutes from './routes/order.route.js';
 
-// Connect DB
+import connectDB from './config/db.js';
+
+import orderRoutes from './routes/order.route.js';
+import productRoutes from './routes/product.route.js';
+
+/* =====================================================
+   ENV CONFIG
+===================================================== */
+
+dotenv.config();
+
+/* =====================================================
+   CONNECT DATABASE
+===================================================== */
+
 connectDB();
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+/* =====================================================
+   EXPRESS APP
+===================================================== */
 
-// Middleware
+const app = express();
+
+/* =====================================================
+   MIDDLEWARE
+===================================================== */
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+/* =====================================================
+   ROUTES
+===================================================== */
+
+// Health Check Route
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
+
+// Product Routes
 app.use('/api/products', productRoutes);
+
+// Order Routes
 app.use('/api/orders', orderRoutes);
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res
-    .status(200)
-    .json({ success: true, message: 'Backend running perfectly!' });
-});
+/* =====================================================
+   404 HANDLER
+===================================================== */
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ success: false, message: 'Something went wrong!' });
-});
-
-// 404 handler
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: 'Route not found' });
+  res.status(404).json({
+    success: false,
+    message: 'Route not found',
+  });
 });
+
+/* =====================================================
+   SERVER START
+===================================================== */
+
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📊 Health: http://localhost:${PORT}/api/health`);
-  console.log(`📦 Products: http://localhost:${PORT}/api/products`);
-  console.log(`🛒 Orders: http://localhost:${PORT}/api/orders`);
-  console.log('\\n💡 Run `node src/utils/db.js` first to seed products!');
-  console.log('🔗 Copy backend/.env.example to .env and set MONGO_URI');
+  console.log(`Server running on port ${PORT}`);
 });
-
-export default app;
