@@ -14,12 +14,6 @@ import productRoutes from './routes/product.route.js';
 dotenv.config();
 
 /* =====================================================
-   CONNECT DATABASE
-===================================================== */
-
-connectDB();
-
-/* =====================================================
    EXPRESS APP
 ===================================================== */
 
@@ -65,6 +59,12 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+connectDB()
+  .then(
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    }),
+  )
+  .catch((error) => {
+    throw new Error(error);
+  });
