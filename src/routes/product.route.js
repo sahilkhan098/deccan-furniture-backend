@@ -20,11 +20,11 @@ router.post('/', createProduct);
 // Get All Products
 router.get('/', getAllProducts);
 
+// ✅ FIX: category route BEFORE id route
+router.get('/category/:category', getProductsByCategory);
+
 // Get Product By ID
 router.get('/:id', getProductById);
-
-// Get Products By Category
-router.get('/category/:category', getProductsByCategory);
 
 // Update Product
 router.put('/:id', updateProduct);
